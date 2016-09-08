@@ -286,7 +286,7 @@ module.exports = class User extends CocoModel
     options.type = 'POST'
     options.data ?= {}
     _.extend(options.data, {name, email, password})
-    jqxhr = @fetch(options)
+    jqxhr = @save(null, options)
     jqxhr.then ->
       window.tracker?.trackEvent 'Finished Signup', category: "Signup", label: 'CodeCombat'
     return jqxhr
@@ -294,9 +294,8 @@ module.exports = class User extends CocoModel
   signupWithFacebook: (name, email, facebookID, options={}) ->
     options.url = _.result(@, 'url') + '/signup-with-facebook'
     options.type = 'POST'
-    options.data ?= {}
-    _.extend(options.data, {name, email, facebookID, facebookAccessToken: application.facebookHandler.token()})
-    jqxhr = @fetch(options)
+    data = {name, email, facebookID, facebookAccessToken: application.facebookHandler.token()}
+    jqxhr = @save(data, options)
     jqxhr.then ->
       window.tracker?.trackEvent 'Facebook Login', category: "Signup", label: 'Facebook'
       window.tracker?.trackEvent 'Finished Signup', category: "Signup", label: 'Facebook'
@@ -307,7 +306,7 @@ module.exports = class User extends CocoModel
     options.type = 'POST'
     options.data ?= {}
     _.extend(options.data, {name, email, gplusID, gplusAccessToken: application.gplusHandler.token()})
-    jqxhr = @fetch(options)
+    jqxhr = @save(null, options)
     jqxhr.then ->
       window.tracker?.trackEvent 'Google Login', category: "Signup", label: 'GPlus'
       window.tracker?.trackEvent 'Finished Signup', category: "Signup", label: 'GPlus'
